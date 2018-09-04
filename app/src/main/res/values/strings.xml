@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Popular-Movies-1</string>
+    <string name="app_name">Popular-Movies</string>
+    <string name="details_label">Movie Details</string>
+    <string name="error_message">Sorry, unable to fetch movies. Try again.</string>
+    <string name="top_rated_title">By Top Rated</string>
+    <string name="popularity_title">By Popularity</string>
+    <string name="rating_label">Rating:</string>
+    <string name="overview_label">Overview</string>
+    <string name="backdrop_desc">Backdrop Image for the movie</string>
+    <string name="poster_desc">Poster Image for the movie</string>
 </resources>
