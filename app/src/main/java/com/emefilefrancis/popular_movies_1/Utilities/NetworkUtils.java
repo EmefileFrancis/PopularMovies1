@@ -1,6 +1,7 @@
 package com.emefilefrancis.popular_movies_1.Utilities;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,20 +15,17 @@ import java.util.Scanner;
  */
 
 public class NetworkUtils {
-    private static final String BASE_URL = "https://api.themoviedb.org/3/discover/movie";
-    private static final String API_KEY = "";
-    private static final String LANGUAGE = "en-US";
+    private static final String BASE_URL = "http://api.themoviedb.org/3/movie/";
+    private static final String API_KEY = "d92bef7c5e62d869e55e8bc640adda5b";
 
     private static final String API_KEY_QUERY_NAME = "api_key";
-    private static final String LANGUAGE_QUERY_NAME = "language";
-    private static final String SORT_BY_QUERY_NAME = "sort_by";
 
     public static URL buildUrl(String sortByQueryParam) throws MalformedURLException{
-        Uri moviesUri = Uri.parse(BASE_URL).buildUpon()
+        String urlWithSort = BASE_URL + sortByQueryParam;
+        Uri moviesUri = Uri.parse(urlWithSort).buildUpon()
                                             .appendQueryParameter(API_KEY_QUERY_NAME, API_KEY)
-                                            .appendQueryParameter(LANGUAGE_QUERY_NAME, LANGUAGE)
-                                            .appendQueryParameter(SORT_BY_QUERY_NAME, sortByQueryParam)
                                             .build();
+        Log.i("URL", moviesUri.toString());
         URL builtUrl = new URL(moviesUri.toString());
         return builtUrl;
     }

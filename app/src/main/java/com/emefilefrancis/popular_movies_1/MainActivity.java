@@ -27,8 +27,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesItemClickHandler{
 
-    private static final String TOP_RATED_QUERY_PARAM = "vote_average.desc";
-    private static final String POPULARITY_QUERY_PARAM = "popularity.desc";
+    private static final String TOP_RATED_QUERY_PARAM = "top_rated";
+    private static final String POPULARITY_QUERY_PARAM = "popular";
 
     private RecyclerView mRecyclerView;
     private TextView mErrorMessage;
