@@ -3,10 +3,16 @@ package com.emefilefrancis.popular_movies_1;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,8 +31,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesItemClickHandler{
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesItemClickHandler,
+        LoaderManager.LoaderCallbacks<List<Movie>>{
 
+    private static final int FETCH_MOVIES_LOADER_ID = 22;
+    private static final String SORT_QUERY_URL_EXTRA = "sort_extra";
     private static final String TOP_RATED_QUERY_PARAM = "top_rated";
     private static final String POPULARITY_QUERY_PARAM = "popular";
 
@@ -62,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.settings, menu);
         return super.onCreateOptionsMenu(menu);
-
     }
 
     @Override
@@ -85,45 +93,66 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         startActivity(intent);
     }
 
-    class FetchMoviesTask extends AsyncTask <String, Void, List<Movie>> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-        }
+    @NonNull
+    @Override
+    public Loader<List<Movie>> onCreateLoader(int id, @Nullable final Bundle args) {
+        return new AsyncTaskLoader<List<Movie>>(this) {
 
-        @Override
-        protected List<Movie> doInBackground(String... strings) {
-            if(strings.length == 0) {
+            List<Movie> cachedMovies;
+
+            @Override
+            protected void onStartLoading() {
+                super.onStartLoading();
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+                if(cachedMovies != null){
+                    deliverResult(cachedMovies);
+                }else{
+                    forceLoad();
+                }
+            }
+
+            @Nullable
+            @Override
+            public List<Movie> loadInBackground() {
+                String queryParam = args.getString(SORT_QUERY_URL_EXTRA);
+                if(queryParam == null || TextUtils.isEmpty(queryParam)){
+                    return null;
+                }
+                try {
+                    URL url = NetworkUtils.buildUrl(queryParam);
+                    String apiCallResponse = NetworkUtils.getResponseFromApiCall(url);
+                    List<Movie> movies = JsonUtils.getArrayFromJsonResponse(apiCallResponse);
+                    return movies;
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 return null;
             }
 
-            String queryParam = strings[0];
-            try {
-                URL url = NetworkUtils.buildUrl(queryParam);
-                String apiCallResponse = NetworkUtils.getResponseFromApiCall(url);
-                List<Movie> movies = JsonUtils.getArrayFromJsonResponse(apiCallResponse);
-                return movies;
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
+            @Override
+            public void deliverResult(@Nullable List<Movie> data) {
+                cachedMovies = data;
+                super.deliverResult(data);
             }
-            return null;
-        }
+        };
+    }
 
-        @Override
-        protected void onPostExecute(List<Movie> movies) {
-            super.onPostExecute(movies);
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if(movies != null){
-                mMoviesAdapter.setmMovies(movies);
-            }else{
-                showErrorMessage();
-            }
+    @Override
+    public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        if(data == null) {
+            showErrorMessage();
         }
+        mMoviesAdapter.setmMovies(data);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
+
     }
 
     private void showErrorMessage(){
@@ -137,6 +166,17 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     }
     private void loadMoviesData() {
         showRecyclerView();
-        new FetchMoviesTask().execute(mSortByQueryParam);
+        Bundle sortQueryBundle = new Bundle();
+        sortQueryBundle.putString(SORT_QUERY_URL_EXTRA, mSortByQueryParam);
+
+        LoaderManager loaderManager = getSupportLoaderManager();
+        Loader<List<Movie>> moviesLoader = loaderManager.getLoader(FETCH_MOVIES_LOADER_ID);
+
+        if(moviesLoader == null){
+            loaderManager.initLoader(FETCH_MOVIES_LOADER_ID, sortQueryBundle, this);
+        }else{
+            loaderManager.restartLoader(FETCH_MOVIES_LOADER_ID, sortQueryBundle, this);
+        }
+        //new FetchMoviesTask().execute(mSortByQueryParam);
     }
 }
