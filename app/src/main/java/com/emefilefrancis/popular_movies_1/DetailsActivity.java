@@ -1,8 +1,10 @@
 package com.emefilefrancis.popular_movies_1;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,12 +13,16 @@ import com.squareup.picasso.Picasso;
 
 public class DetailsActivity extends AppCompatActivity {
 
+    private static final String MOVIE_ID_AS_EXTRA = "movie_id";
+
     private ImageView mBackDropImage;
     private ImageView mPosterImage;
     private TextView mMovieTitle;
     private TextView mMovieReleaseDate;
     private TextView mMovieRating;
     private TextView mMovieOverview;
+
+    private Movie movie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +38,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(intent.hasExtra("TheSelectedMovie")){
-            Movie movie = intent.getParcelableExtra("TheSelectedMovie");
+            movie = intent.getParcelableExtra("TheSelectedMovie");
             loadUIWithData(movie);
         }
     }
@@ -50,5 +56,13 @@ public class DetailsActivity extends AppCompatActivity {
         mMovieReleaseDate.setText(movie.getReleaseDate());
         mMovieRating.setText(String.valueOf(movie.getRating()));
         mMovieOverview.setText(String.valueOf(movie.getOverview()));
+    }
+
+    public void loadReviews(View view){
+        Activity originatingActivity = DetailsActivity.this;
+        Class destinationActivity = ReviewsActivity.class;
+        Intent intent = new Intent(originatingActivity, destinationActivity);
+        intent.putExtra(MOVIE_ID_AS_EXTRA, String.valueOf(movie.getId()));
+        startActivity(intent);
     }
 }

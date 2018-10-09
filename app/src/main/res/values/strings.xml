@@ -8,4 +8,11 @@
     <string name="overview_label">Overview</string>
     <string name="backdrop_desc">Backdrop Image for the movie</string>
     <string name="poster_desc">Poster Image for the movie</string>
+    <string name="trailer_label">Trailers</string>
+    <string name="review_label">Reviews</string>
+    <string name="favorite_label">Like</string>
+    <string name="review_header">Movie Reviews</string>
+    <string name="by_label">By:</string>
+    <string name="no_reviews_message">There are no reviews for this movie.</string>
+    <string name="reviews_label">Movie Reviews</string>
 </resources>

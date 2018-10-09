@@ -2,7 +2,6 @@ package com.emefilefrancis.popular_movies_1;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 try {
                     URL url = NetworkUtils.buildUrl(queryParam);
                     String apiCallResponse = NetworkUtils.getResponseFromApiCall(url);
-                    List<Movie> movies = JsonUtils.getArrayFromJsonResponse(apiCallResponse);
+                    List<Movie> movies = JsonUtils.getMoviesFromJsonResponse(apiCallResponse);
                     return movies;
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
