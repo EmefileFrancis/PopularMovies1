@@ -1,5 +1,7 @@
 package com.emefilefrancis.popular_movies_1;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -12,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,9 +22,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.emefilefrancis.popular_movies_1.Database.AppDatabase;
 import com.emefilefrancis.popular_movies_1.Models.Movie;
 import com.emefilefrancis.popular_movies_1.Utilities.JsonUtils;
 import com.emefilefrancis.popular_movies_1.Utilities.NetworkUtils;
+import com.emefilefrancis.popular_movies_1.ViewModels.AllMoviesViewModelFactory;
+import com.emefilefrancis.popular_movies_1.ViewModels.AllMoviesViewModel;
 
 import org.json.JSONException;
 
@@ -37,15 +43,19 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private static final String SORT_QUERY_URL_EXTRA = "sort_extra";
     private static final String TOP_RATED_QUERY_PARAM = "top_rated";
     private static final String POPULARITY_QUERY_PARAM = "popular";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
     private TextView mErrorMessage;
     private ProgressBar mLoadingIndicator;
+    private TextView mNoFavoriteMoviesMessage;
 
     private String mSortByQueryParam = POPULARITY_QUERY_PARAM;
 
     private MoviesAdapter mMoviesAdapter;
     private GridLayoutManager mLayoutManager;
+
+    private AppDatabase mDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mRecyclerView = findViewById(R.id.main_rv);
         mLoadingIndicator = findViewById(R.id.loading_indicator_pb);
         mErrorMessage = findViewById(R.id.error_message_tv);
+        mNoFavoriteMoviesMessage = findViewById(R.id.no_favorite_movie_message_tv);
 
         mMoviesAdapter = new MoviesAdapter(this, this);
         mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
@@ -62,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mRecyclerView.setAdapter(mMoviesAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        mDB = AppDatabase.getInstance(getApplicationContext());
         loadMoviesData();
     }
 
@@ -76,10 +88,20 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.popularity){ mSortByQueryParam = POPULARITY_QUERY_PARAM; }
+        if(id == R.id.popularity){
+            mSortByQueryParam = POPULARITY_QUERY_PARAM;
+            loadMoviesData();
+        }
 
-        if(id == R.id.top_rated){ mSortByQueryParam = TOP_RATED_QUERY_PARAM; }
-        loadMoviesData();
+        if(id == R.id.top_rated){
+            mSortByQueryParam = TOP_RATED_QUERY_PARAM;
+            loadMoviesData();
+        }
+
+        if(id == R.id.favorite) {
+            retrieveMovies();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -154,6 +176,18 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     }
 
+    private void retrieveMovies(){
+        AllMoviesViewModelFactory mainViewModelFactory = new AllMoviesViewModelFactory(mDB);
+        AllMoviesViewModel mainViewModel = ViewModelProviders.of(this, mainViewModelFactory).get(AllMoviesViewModel.class);
+        mainViewModel.getMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                Log.d(TAG, "Receiving database update from LiveData");
+                mMoviesAdapter.setmMovies(movies);
+            }
+        });
+    }
+
     private void showErrorMessage(){
         mErrorMessage.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
@@ -162,6 +196,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private void showRecyclerView(){
         mErrorMessage.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void showNoFavoriteMoviesMessage(){
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mNoFavoriteMoviesMessage.setVisibility(View.VISIBLE);
     }
     private void loadMoviesData() {
         showRecyclerView();
@@ -176,6 +215,5 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         }else{
             loaderManager.restartLoader(FETCH_MOVIES_LOADER_ID, sortQueryBundle, this);
         }
-        //new FetchMoviesTask().execute(mSortByQueryParam);
     }
 }

@@ -21,6 +21,13 @@
             android:layout_height="wrap_content"
             android:visibility="invisible"/>
 
+        <TextView
+            android:id="@+id/no_favorite_movie_message_tv"
+            android:text="@string/no_favorite_movies_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"/>
+
         <ProgressBar
             android:id="@+id/loading_indicator_pb"
             android:layout_width="@dimen/size_42"

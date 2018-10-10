@@ -15,4 +15,7 @@
     <string name="by_label">By:</string>
     <string name="no_reviews_message">There are no reviews for this movie.</string>
     <string name="reviews_label">Movie Reviews</string>
+    <string name="creating_db_msg">Creating new database instance</string>
+    <string name="favorite_title">My Favorites</string>
+    <string name="no_favorite_movies_message">You have no favorite movies.</string>
 </resources>
