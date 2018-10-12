@@ -15,13 +15,18 @@ import java.util.Scanner;
  */
 
 public class NetworkUtils {
+
     private static final String BASE_URL = "http://api.themoviedb.org/3/movie/";
-    private static final String API_KEY = "d92bef7c5e62d869e55e8bc640adda5b";
+    private static final String API_KEY = "";
 
     private static final String API_KEY_QUERY_NAME = "api_key";
 
-    public static URL buildUrl(String sortByQueryParam) throws MalformedURLException{
-        String urlWithSort = BASE_URL + sortByQueryParam;
+    public static URL buildUrl(String path, boolean isTrailer) throws MalformedURLException{
+        String urlWithSort = BASE_URL + path;
+
+        if(isTrailer)
+            urlWithSort = urlWithSort + "/videos";
+
         Uri moviesUri = Uri.parse(urlWithSort).buildUpon()
                                             .appendQueryParameter(API_KEY_QUERY_NAME, API_KEY)
                                             .build();

@@ -80,7 +80,7 @@ public class ReviewsActivity extends AppCompatActivity implements LoaderManager.
 
                 String extraUrlPath = movieId + REVIEWS_URL_PART;
                 try {
-                    URL builtUrl = NetworkUtils.buildUrl(extraUrlPath);
+                    URL builtUrl = NetworkUtils.buildUrl(extraUrlPath, false);
                     String reviewJsonResponse = NetworkUtils.getResponseFromApiCall(builtUrl);
                     reviews = JsonUtils.getReviewsFromJsonResponse(reviewJsonResponse);
                 } catch (MalformedURLException e) {

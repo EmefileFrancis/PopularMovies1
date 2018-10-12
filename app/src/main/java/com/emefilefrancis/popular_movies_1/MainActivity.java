@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private RecyclerView mRecyclerView;
     private TextView mErrorMessage;
     private ProgressBar mLoadingIndicator;
-    private TextView mNoFavoriteMoviesMessage;
 
     private String mSortByQueryParam = POPULARITY_QUERY_PARAM;
 
@@ -65,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mRecyclerView = findViewById(R.id.main_rv);
         mLoadingIndicator = findViewById(R.id.loading_indicator_pb);
         mErrorMessage = findViewById(R.id.error_message_tv);
-        mNoFavoriteMoviesMessage = findViewById(R.id.no_favorite_movie_message_tv);
 
         mMoviesAdapter = new MoviesAdapter(this, this);
         mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
@@ -135,12 +133,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             @Nullable
             @Override
             public List<Movie> loadInBackground() {
-                String queryParam = args.getString(SORT_QUERY_URL_EXTRA);
-                if(queryParam == null || TextUtils.isEmpty(queryParam)){
+                String path = args.getString(SORT_QUERY_URL_EXTRA);
+                if(path == null || TextUtils.isEmpty(path)){
                     return null;
                 }
                 try {
-                    URL url = NetworkUtils.buildUrl(queryParam);
+                    URL url = NetworkUtils.buildUrl(path, false);
                     String apiCallResponse = NetworkUtils.getResponseFromApiCall(url);
                     List<Movie> movies = JsonUtils.getMoviesFromJsonResponse(apiCallResponse);
                     return movies;
@@ -198,10 +196,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void showNoFavoriteMoviesMessage(){
-        mRecyclerView.setVisibility(View.INVISIBLE);
-        mNoFavoriteMoviesMessage.setVisibility(View.VISIBLE);
-    }
     private void loadMoviesData() {
         showRecyclerView();
         Bundle sortQueryBundle = new Bundle();

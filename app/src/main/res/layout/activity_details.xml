@@ -33,9 +33,9 @@
         <ImageView
             android:id="@+id/poster_iv"
             android:layout_width="149dp"
-            android:layout_height="240dp"
+            android:layout_height="151dp"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="@dimen/size_16"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/poster_desc"
             android:scaleType="centerCrop"
@@ -115,22 +115,10 @@
             android:text="TextView"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/overview_label_tv"
-            android:layout_marginRight="@dimen/size_8"
-            android:layout_marginLeft="@dimen/size_16" />
-
-        <Button
-            android:id="@+id/trailer_btn"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="@dimen/size_8"
-            android:layout_marginTop="8dp"
-            android:text="@string/trailer_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/rating_label_tv"
-            app:layout_constraintTop_toBottomOf="@+id/rating_tv" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/review_btn"
@@ -139,11 +127,12 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="@dimen/size_8"
             android:layout_marginTop="8dp"
-            android:text="@string/review_label"
             android:onClick="loadReviews"
+            android:text="@string/review_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/rating_tv"
-            app:layout_constraintTop_toBottomOf="@+id/trailer_btn" />
+            app:layout_constraintStart_toStartOf="@+id/rating_label_tv"
+            app:layout_constraintTop_toBottomOf="@+id/rating_tv" />
+
 
         <CheckBox
             android:id="@+id/favorite_cb"
@@ -155,6 +144,27 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/rating_tv"
             app:layout_constraintTop_toTopOf="@+id/rating_tv" />
+
+        <LinearLayout
+            android:id="@+id/trailers_layout"
+            android:layout_width="230dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/overview_tv">
+
+            <TextView
+                android:id="@+id/no_trailers_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_trailers_message"
+                android:visibility="invisible" />
+
+        </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>
 

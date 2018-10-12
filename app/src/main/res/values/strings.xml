@@ -18,4 +18,5 @@
     <string name="creating_db_msg">Creating new database instance</string>
     <string name="favorite_title">My Favorites</string>
     <string name="no_favorite_movies_message">You have no favorite movies.</string>
+    <string name="no_trailers_message">This movie has no trailers.</string>
 </resources>
