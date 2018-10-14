@@ -4,7 +4,7 @@ an api call is made to theMovieDB Api to get a list of all movies. And users wil
 sorted. Either by popularity or most rated.
 
 # Technology
-Android Studio, Java
+Android Studio, Java, Room, LiveData, ViewModel, AsyncTaskLoader
 
 # Requirement
 To make a call to theMovieDB Api, you have to go their website- https://www.themoviedb.org/, sign-up and generate an API_KEY. After you get
