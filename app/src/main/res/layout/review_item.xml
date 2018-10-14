@@ -2,7 +2,10 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:outlineProvider="background"
+    android:background="@drawable/custom_border"
+    android:layout_margin="@dimen/size_8">
 
 
     <TextView
@@ -14,6 +17,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/by_label"
         android:textSize="18sp"
+        android:fontFamily="sans-serif-smallcaps"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,6 +29,7 @@
         android:layout_marginStart="8dp"
         android:text="TextView"
         android:textSize="18sp"
+        android:fontFamily="sans-serif-smallcaps"
         app:layout_constraintStart_toEndOf="@+id/by_label"
         app:layout_constraintTop_toTopOf="@+id/by_label" />
 
@@ -37,8 +42,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
+        android:fontFamily="sans-serif-light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/by_label" />
+
+
 </android.support.constraint.ConstraintLayout>

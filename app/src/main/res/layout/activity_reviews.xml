@@ -11,17 +11,21 @@
 
     <TextView
         android:id="@+id/reviews_error_message_tv"
-        android:text="@string/error_message"
+        android:text="@string/reviews_error_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:fontFamily="sans-serif-smallcaps"
+        android:textSize="@dimen/size_16_tx"/>
 
     <TextView
         android:id="@+id/no_reviews_message_tv"
         android:text="@string/no_reviews_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:fontFamily="sans-serif-smallcaps"
+        android:textSize="@dimen/size_16_tx"/>
 
     <ProgressBar
         android:id="@+id/reviews_loading_indicator_pb"

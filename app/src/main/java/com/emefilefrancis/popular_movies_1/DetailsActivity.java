@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -254,8 +255,13 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             final String trailerKey = trailer.getKey();
 
             Button button = new Button(this);
-            button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ActionBar.LayoutParams.WRAP_CONTENT));
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ActionBar.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 8, 0, 8);
+            button.setLayoutParams(layoutParams);
+            button.setTypeface(Typeface.create("sans-serif_light", Typeface.NORMAL));
+            button.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+
             button.setText(trailerName);
             button.setOnClickListener(new View.OnClickListener() {
                 String youtubeBaseUrl = "https://www.youtube.com/watch?v=";

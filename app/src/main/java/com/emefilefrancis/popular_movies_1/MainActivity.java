@@ -40,14 +40,18 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         LoaderManager.LoaderCallbacks<List<Movie>>{
 
     private static final int FETCH_MOVIES_LOADER_ID = 22;
+
     private static final String SORT_QUERY_URL_EXTRA = "sort_extra";
     private static final String TOP_RATED_QUERY_PARAM = "top_rated";
     private static final String POPULARITY_QUERY_PARAM = "popular";
+    private static final String FAVORITE_PARAM = "favorite";
+
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
     private TextView mErrorMessage;
     private ProgressBar mLoadingIndicator;
+    private TextView mMovieCategoryLabel;
 
     private String mSortByQueryParam = POPULARITY_QUERY_PARAM;
 
@@ -64,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mRecyclerView = findViewById(R.id.main_rv);
         mLoadingIndicator = findViewById(R.id.loading_indicator_pb);
         mErrorMessage = findViewById(R.id.error_message_tv);
+        mMovieCategoryLabel = findViewById(R.id.movie_category_label);
 
         mMoviesAdapter = new MoviesAdapter(this, this);
         mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
@@ -97,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         }
 
         if(id == R.id.favorite) {
+            mSortByQueryParam = FAVORITE_PARAM;
             retrieveMovies();
         }
 
@@ -110,6 +116,16 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         Intent intent = new Intent(context, detailsActivity);
         intent.putExtra("TheSelectedMovie", movie);
         startActivity(intent);
+    }
+
+    private void setMoviesCategoryLabel() {
+        if(mSortByQueryParam == POPULARITY_QUERY_PARAM){
+            mMovieCategoryLabel.setText(R.string.by_popularity_label);
+        }else if(mSortByQueryParam == TOP_RATED_QUERY_PARAM){
+            mMovieCategoryLabel.setText(R.string.top_rated_label);
+        }else if(mSortByQueryParam == FAVORITE_PARAM){
+            mMovieCategoryLabel.setText(R.string.favorites_label);
+        }
     }
 
     @NonNull
@@ -175,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     }
 
     private void retrieveMovies(){
+        setMoviesCategoryLabel();
         AllMoviesViewModelFactory mainViewModelFactory = new AllMoviesViewModelFactory(mDB);
         AllMoviesViewModel mainViewModel = ViewModelProviders.of(this, mainViewModelFactory).get(AllMoviesViewModel.class);
         mainViewModel.getMovies().observe(this, new Observer<List<Movie>>() {
@@ -187,17 +204,20 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     }
 
     private void showErrorMessage(){
+        mMovieCategoryLabel.setVisibility(View.INVISIBLE);
         mErrorMessage.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
     }
 
     private void showRecyclerView(){
         mErrorMessage.setVisibility(View.INVISIBLE);
+        mMovieCategoryLabel.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void loadMoviesData() {
         showRecyclerView();
+        setMoviesCategoryLabel();
         Bundle sortQueryBundle = new Bundle();
         sortQueryBundle.putString(SORT_QUERY_URL_EXTRA, mSortByQueryParam);
 
