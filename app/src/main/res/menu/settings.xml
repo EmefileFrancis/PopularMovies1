@@ -10,4 +10,9 @@
         app:showAsAction="never"
         android:orderInCategory="2"
         android:title="@string/popularity_title"/>
+
+    <item android:id="@+id/favorite"
+        app:showAsAction="never"
+        android:orderInCategory="3"
+        android:title="@string/favorite_title"/>
 </menu>

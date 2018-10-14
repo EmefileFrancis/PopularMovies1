@@ -21,11 +21,23 @@
         <activity
             android:name=".DetailsActivity"
             android:label="@string/details_label"
+            android:launchMode="singleTop"
             android:parentActivityName=".MainActivity">
+
             <!-- Support for Parent Activity in older versions of android -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".ReviewsActivity"
+            android:label="@string/reviews_label"
+            android:parentActivityName=".DetailsActivity">
+
+            <!-- Support for Parent Activity in older versions of android -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DetailsActivity" />
         </activity>
     </application>
 

@@ -16,7 +16,7 @@
         <ImageView
             android:id="@+id/backdrop_iv"
             android:contentDescription="@string/backdrop_desc"
-            android:layout_width="316dp"
+            android:layout_width="330dp"
             android:layout_height="150dp"
             android:layout_marginEnd="0dp"
             android:layout_marginLeft="0dp"
@@ -32,67 +32,119 @@
 
         <ImageView
             android:id="@+id/poster_iv"
-            android:contentDescription="@string/poster_desc"
             android:layout_width="149dp"
-            android:layout_height="190dp"
-            android:layout_marginLeft="@dimen/size_8"
-            android:layout_marginStart="@dimen/size_8"
+            android:layout_height="199dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
+            android:contentDescription="@string/poster_desc"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backdrop_iv"
+            app:layout_constraintTop_toBottomOf="@+id/movie_title_tv"
             app:srcCompat="@mipmap/ic_launcher_round" />
 
         <TextView
             android:id="@+id/movie_title_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/size_16"
-            android:layout_marginStart="@dimen/size_8"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
             android:text="TextView"
-            android:textSize="@dimen/size_22_tx"
-            android:textStyle="bold"
+            android:textSize="28sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_iv" />
+
+        <TextView
+            android:id="@+id/release_date_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:text="@string/release_date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/poster_iv"
-            app:layout_constraintTop_toBottomOf="@+id/backdrop_iv"
-            android:layout_marginRight="@dimen/size_16"
-            android:layout_marginLeft="@dimen/size_8" />
+            app:layout_constraintTop_toTopOf="@+id/poster_iv" />
 
         <TextView
             android:id="@+id/release_date_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/size_8"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_marginStart="@dimen/size_8"
-            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:paddingTop="0dp"
             android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/poster_iv"
-            app:layout_constraintTop_toBottomOf="@+id/movie_title_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/release_date_label" />
 
         <TextView
             android:id="@+id/rating_label_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_marginStart="@dimen/size_8"
-            android:layout_marginTop="@dimen/size_32"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
             android:text="@string/rating_label"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/poster_iv"
-            app:layout_constraintTop_toBottomOf="@+id/release_date_tv"
-            android:layout_marginLeft="@dimen/size_8" />
+            app:layout_constraintTop_toBottomOf="@+id/release_date_tv" />
 
         <TextView
             android:id="@+id/rating_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_marginStart="@dimen/size_8"
-            android:layout_marginTop="0dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
             android:text="TextView"
             android:textSize="@dimen/size_22_tx"
-            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/poster_iv"
-            app:layout_constraintTop_toBottomOf="@+id/rating_label_tv"
-            android:layout_marginLeft="@dimen/size_8" />
+            app:layout_constraintTop_toBottomOf="@+id/rating_label_tv" />
+
+        <CheckBox
+            android:id="@+id/favorite_cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/favorite_label"
+            app:layout_constraintBottom_toTopOf="@+id/review_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/review_btn"
+            app:layout_constraintTop_toBottomOf="@+id/rating_tv" />
+
+        <Button
+            android:id="@+id/review_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:onClick="loadReviews"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/review_label"
+            android:background="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="@+id/poster_iv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/poster_iv" />
 
         <TextView
             android:id="@+id/overview_label_tv"
@@ -100,12 +152,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/size_8"
             android:layout_marginTop="@dimen/size_16"
+            android:fontFamily="sans-serif-smallcaps"
             android:text="@string/overview_label"
             android:textSize="@dimen/size_16_tx"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/poster_iv"
-            android:layout_marginLeft="@dimen/size_16" />
+            android:layout_marginLeft="@dimen/size_8" />
 
         <TextView
             android:id="@+id/overview_tv"
@@ -113,15 +166,52 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/size_8"
             android:layout_marginEnd="@dimen/size_8"
+            android:layout_marginRight="8dp"
             android:layout_marginStart="@dimen/size_8"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="@dimen/size_8"
             android:text="TextView"
+            android:fontFamily="sans-serif-light"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/overview_label_tv"
-            android:layout_marginRight="@dimen/size_8"
-            android:layout_marginLeft="@dimen/size_16" />
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/trailers_label_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/size_8"
+            android:layout_marginTop="@dimen/size_16"
+            android:fontFamily="sans-serif-smallcaps"
+            android:text="@string/trailers_label"
+            android:textSize="@dimen/size_16_tx"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/overview_tv"
+            android:layout_marginLeft="@dimen/size_8" />
+
+        <LinearLayout
+            android:id="@+id/trailers_layout"
+            android:layout_width="250dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/trailers_label_tv">
+
+            <TextView
+                android:id="@+id/no_trailers_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_trailers_message"
+                android:visibility="invisible" />
+
+        </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>
 

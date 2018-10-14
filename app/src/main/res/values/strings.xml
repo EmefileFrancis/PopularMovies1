@@ -8,4 +8,21 @@
     <string name="overview_label">Overview</string>
     <string name="backdrop_desc">Backdrop Image for the movie</string>
     <string name="poster_desc">Poster Image for the movie</string>
+    <string name="trailer_label">Trailers</string>
+    <string name="review_label">Reviews</string>
+    <string name="favorite_label">Like</string>
+    <string name="review_header">Movie Reviews</string>
+    <string name="by_label">By:</string>
+    <string name="no_reviews_message">There are no reviews for this movie.</string>
+    <string name="reviews_label">Movie Reviews</string>
+    <string name="creating_db_msg">Creating new database instance</string>
+    <string name="favorite_title">My Favorites</string>
+    <string name="no_favorite_movies_message">You have no favorite movies.</string>
+    <string name="no_trailers_message">This movie has no trailers.</string>
+    <string name="release_date">Release Date:</string>
+    <string name="trailers_label">Trailers</string>
+    <string name="by_popularity_label">By Popularity</string>
+    <string name="top_rated_label">By Top Rated</string>
+    <string name="favorites_label">By Favorites</string>
+    <string name="reviews_error_message">Sorry, unable to fetch reviews for this movie at this moment.</string>
 </resources>
