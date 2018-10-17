@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.emefilefrancis.popular_movies_1.Models.Movie;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -76,10 +76,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
         public void bindData(int position) {
             Movie movie = mMovies.get(position);
-            Picasso.get()
+
+            // Using Glide to load the PosterPath Image
+            Glide.with(mContext)
                     .load(movie.getPosterPath())
                     .placeholder(R.drawable.ic_launcher_background)
                     .into(mImageView);
+
             mMovieTitle.setText(movie.getTitle());
             mMovieRating.setText(String.valueOf(movie.getRating()));
             mReleaseDate.setText(movie.getReleaseDate());

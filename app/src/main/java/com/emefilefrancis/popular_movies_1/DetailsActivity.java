@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.emefilefrancis.popular_movies_1.Database.AppDatabase;
 import com.emefilefrancis.popular_movies_1.Database.AppExecutors;
 import com.emefilefrancis.popular_movies_1.Models.Movie;
@@ -32,7 +33,6 @@ import com.emefilefrancis.popular_movies_1.Utilities.JsonUtils;
 import com.emefilefrancis.popular_movies_1.Utilities.NetworkUtils;
 import com.emefilefrancis.popular_movies_1.ViewModels.MovieViewModel;
 import com.emefilefrancis.popular_movies_1.ViewModels.MovieViewModelFactory;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
@@ -41,20 +41,24 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Trailer>> {
 
     private static final int TRAILERS_LOADER_ID = 24;
     private static final String MOVIE_ID_AS_EXTRA = "movie_id";
 
-    private ImageView mBackDropImage;
-    private ImageView mPosterImage;
-    private TextView mMovieTitle;
-    private TextView mMovieReleaseDate;
-    private TextView mMovieRating;
-    private TextView mMovieOverview;
-    private CheckBox mFavorite;
-    private LinearLayout mLinearLayout;
-    private TextView mNoTrailersMessage;
+    // Using Jake Wharton's ButterKnife
+    @BindView(R.id.backdrop_iv) ImageView mBackDropImage;
+    @BindView(R.id.poster_iv) ImageView mPosterImage;
+    @BindView(R.id.movie_title_tv) TextView mMovieTitle;
+    @BindView(R.id.release_date_tv) TextView mMovieReleaseDate;
+    @BindView(R.id.rating_tv) TextView mMovieRating;
+    @BindView(R.id.overview_tv) TextView mMovieOverview;
+    @BindView(R.id.favorite_cb) CheckBox mFavorite;
+    @BindView(R.id.trailers_layout) LinearLayout mLinearLayout;
+    @BindView(R.id.no_trailers_tv) TextView mNoTrailersMessage;
 
     private Movie mMovie;
 
@@ -65,16 +69,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        mBackDropImage = findViewById(R.id.backdrop_iv);
-        mPosterImage = findViewById(R.id.poster_iv);
-        mMovieTitle = findViewById(R.id.movie_title_tv);
-        mMovieReleaseDate = findViewById(R.id.release_date_tv);
-        mMovieRating = findViewById(R.id.rating_tv);
-        mMovieOverview = findViewById(R.id.overview_tv);
-        mFavorite = findViewById(R.id.favorite_cb);
-        mLinearLayout = findViewById(R.id.trailers_layout);
-        mNoTrailersMessage = findViewById(R.id.no_trailers_tv);
-
+        ButterKnife.bind(this);
         mDB = AppDatabase.getInstance(getApplicationContext());
 
         Intent intent = getIntent();
@@ -158,11 +153,11 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     }
 
     private void loadUIWithData(Movie movie){
-        Picasso.get()
+        Glide.with(this)
                 .load(movie.getBackdropPath())
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(mBackDropImage);
-        Picasso.get()
+        Glide.with(this)
                 .load(movie.getPosterPath())
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(mPosterImage);

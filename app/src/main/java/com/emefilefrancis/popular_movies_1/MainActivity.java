@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +38,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesItemClickHandler,
         LoaderManager.LoaderCallbacks<List<Movie>>{
 
@@ -45,18 +50,21 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private static final String TOP_RATED_QUERY_PARAM = "top_rated";
     private static final String POPULARITY_QUERY_PARAM = "popular";
     private static final String FAVORITE_PARAM = "favorite";
+    private static final String LAST_VISIBLE_POSITION_EXTRA = "visible_position_extra";
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private RecyclerView mRecyclerView;
-    private TextView mErrorMessage;
-    private ProgressBar mLoadingIndicator;
-    private TextView mMovieCategoryLabel;
+    //Using Jake Wharton's ButterKnife
+    @BindView(R.id.main_rv) RecyclerView mRecyclerView;
+    @BindView(R.id.error_message_tv) TextView mErrorMessage;
+    @BindView(R.id.loading_indicator_pb) ProgressBar mLoadingIndicator;
+    @BindView(R.id.movie_category_label) TextView mMovieCategoryLabel;
 
     private String mSortByQueryParam = POPULARITY_QUERY_PARAM;
 
     private MoviesAdapter mMoviesAdapter;
     private GridLayoutManager mLayoutManager;
+    private Parcelable mSavedRecyclerLayoutState;
 
     private AppDatabase mDB;
 
@@ -65,19 +73,17 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRecyclerView = findViewById(R.id.main_rv);
-        mLoadingIndicator = findViewById(R.id.loading_indicator_pb);
-        mErrorMessage = findViewById(R.id.error_message_tv);
-        mMovieCategoryLabel = findViewById(R.id.movie_category_label);
+        ButterKnife.bind(this);
 
         mMoviesAdapter = new MoviesAdapter(this, this);
-        mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+        mLayoutManager = new GridLayoutManager(this, calculateNoOfColumns(this), GridLayoutManager.VERTICAL, false);
 
         mRecyclerView.setAdapter(mMoviesAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mDB = AppDatabase.getInstance(getApplicationContext());
         loadMoviesData();
+
     }
 
     @Override
@@ -85,6 +91,35 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.settings, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 200;
+        int noOfColumns = (int) (dpWidth/scalingFactor);
+        if(noOfColumns < 2)
+            noOfColumns = 2;
+        return noOfColumns;
+    }
+
+    // Retrieve the RecyclerView's initial scroll position
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState != null && savedInstanceState.getParcelable(LAST_VISIBLE_POSITION_EXTRA) != null){
+            mSavedRecyclerLayoutState = savedInstanceState.getParcelable(LAST_VISIBLE_POSITION_EXTRA);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedRecyclerLayoutState);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+
+        // Save the RecyclerView's Scroll Position
+        mSavedRecyclerLayoutState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        state.putParcelable(LAST_VISIBLE_POSITION_EXTRA, mSavedRecyclerLayoutState);
     }
 
     @Override
@@ -183,6 +218,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             showErrorMessage();
         }
         mMoviesAdapter.setmMovies(data);
+        if(mSavedRecyclerLayoutState != null)
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedRecyclerLayoutState);
     }
 
     @Override
