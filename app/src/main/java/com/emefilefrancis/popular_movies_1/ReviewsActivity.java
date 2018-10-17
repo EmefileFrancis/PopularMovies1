@@ -26,18 +26,21 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ReviewsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Review>> {
 
     private static final String MOVIE_ID_AS_EXTRA = "movie_id";
     private static final String MOVIE_ID_AS_KEY = "movie_id";
     private static final String REVIEWS_URL_PART = "/reviews";
     private static final int REVIEWS_LOADER_ID = 23;
-    RecyclerView mRecyclerView;
+    @BindView(R.id.reviews_rv) RecyclerView mRecyclerView;
     ReviewsAdapter mAdapter;
     LinearLayoutManager mLayoutManager;
-    TextView mNoReviewsMessage;
-    TextView mErrorMessage;
-    ProgressBar mLoadingReviewsPB;
+    @BindView(R.id.no_reviews_message_tv) TextView mNoReviewsMessage;
+    @BindView(R.id.reviews_error_message_tv) TextView mErrorMessage;
+    @BindView(R.id.reviews_loading_indicator_pb) ProgressBar mLoadingReviewsPB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +51,7 @@ public class ReviewsActivity extends AppCompatActivity implements LoaderManager.
         mAdapter = new ReviewsAdapter(this);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
-        mNoReviewsMessage = findViewById(R.id.no_reviews_message_tv);
-        mErrorMessage = findViewById(R.id.reviews_error_message_tv);
-        mLoadingReviewsPB = findViewById(R.id.reviews_loading_indicator_pb);
+        ButterKnife.bind(this);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);

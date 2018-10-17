@@ -7,4 +7,14 @@
     <dimen name="size_16_tx">16sp</dimen>
     <dimen name="size_8_tx">8sp</dimen>
     <dimen name="size_22_tx">22sp</dimen>
+    <dimen name="size_330">330dp</dimen>
+    <dimen name="size_150">150dp</dimen>
+    <dimen name="size_149">149dp</dimen>
+    <dimen name="size_199">199dp</dimen>
+    <dimen name="size_28_tx">28sp</dimen>
+    <dimen name="size_4">4dp</dimen>
+    <dimen name="size_250">250dp</dimen>
+    <dimen name="size_200">200dp</dimen>
+    <dimen name="size_10">10dp</dimen>
+    <dimen name="size_18_tx">18sp</dimen>
 </resources>
