@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private static final String POPULARITY_QUERY_PARAM = "popular";
     private static final String FAVORITE_PARAM = "favorite";
     private static final String LAST_VISIBLE_POSITION_EXTRA = "visible_position_extra";
+    private static final String MOVIES_SHARED_PREF = "popular_movies_app_shared_pref";
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     @BindView(R.id.movie_category_label) TextView mMovieCategoryLabel;
 
     private String mSortByQueryParam = POPULARITY_QUERY_PARAM;
+    private SharedPreferences sharedPreferences;
 
     private MoviesAdapter mMoviesAdapter;
     private GridLayoutManager mLayoutManager;
@@ -82,8 +85,27 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mDB = AppDatabase.getInstance(getApplicationContext());
-        loadMoviesData();
 
+        displayMovies(savedInstanceState);
+
+    }
+
+    private void displayMovies(Bundle savedInstanceState) {
+        if(savedInstanceState != null && savedInstanceState.getString(SORT_QUERY_URL_EXTRA) != null)
+            mSortByQueryParam = savedInstanceState.getString(SORT_QUERY_URL_EXTRA);
+
+        if(savedInstanceState == null) {
+            sharedPreferences = getSharedPreferences(MOVIES_SHARED_PREF, MODE_PRIVATE);
+            String restoredSortParam = sharedPreferences.getString(SORT_QUERY_URL_EXTRA, null);
+            if(restoredSortParam != null)
+                mSortByQueryParam = restoredSortParam;
+        }
+
+        if(mSortByQueryParam == FAVORITE_PARAM){
+            retrieveMovies();
+        }else{
+            loadMoviesData();
+        }
     }
 
     @Override
@@ -119,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
         // Save the RecyclerView's Scroll Position
         mSavedRecyclerLayoutState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        state.putString(SORT_QUERY_URL_EXTRA, mSortByQueryParam);
         state.putParcelable(LAST_VISIBLE_POSITION_EXTRA, mSavedRecyclerLayoutState);
     }
 
@@ -150,6 +173,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         Context context = MainActivity.this;
         Intent intent = new Intent(context, detailsActivity);
         intent.putExtra("TheSelectedMovie", movie);
+        // Store the sort param in SharedPreference so as  to retrieve it later when coming back to this activity
+        SharedPreferences.Editor editor = getSharedPreferences(MOVIES_SHARED_PREF, MODE_PRIVATE).edit();
+        editor.putString(SORT_QUERY_URL_EXTRA, mSortByQueryParam);
+        editor.apply();
         startActivity(intent);
     }
 
@@ -218,6 +245,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             showErrorMessage();
         }
         mMoviesAdapter.setmMovies(data);
+
+        //Restore the RecycleView State
         if(mSavedRecyclerLayoutState != null)
             mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedRecyclerLayoutState);
     }
@@ -229,6 +258,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     private void retrieveMovies(){
         setMoviesCategoryLabel();
+
+        if(mSavedRecyclerLayoutState != null)
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedRecyclerLayoutState);
+
         AllMoviesViewModelFactory mainViewModelFactory = new AllMoviesViewModelFactory(mDB);
         AllMoviesViewModel mainViewModel = ViewModelProviders.of(this, mainViewModelFactory).get(AllMoviesViewModel.class);
         mainViewModel.getMovies().observe(this, new Observer<List<Movie>>() {

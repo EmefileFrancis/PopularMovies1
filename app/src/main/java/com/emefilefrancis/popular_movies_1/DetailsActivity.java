@@ -122,7 +122,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                     @Override
                     public void onChanged(@Nullable Movie movie) {
                         if(((CheckBox) v).isChecked()){
-                            Toast.makeText(DetailsActivity.this, "Added to Favorites", Toast.LENGTH_LONG).show();
+                            Toast.makeText(DetailsActivity.this, "Added to Favorites", Toast.LENGTH_SHORT).show();
                             //Movie is not inside the database, then insert it
                             if(movie == null){
                                 mMovie.setFavorite(true);
@@ -134,7 +134,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                                 });
                             }
                         }else{
-                            Toast.makeText(DetailsActivity.this, "Removed from Favorites", Toast.LENGTH_LONG).show();
+                            Toast.makeText(DetailsActivity.this, "Removed from Favorites", Toast.LENGTH_SHORT).show();
                             if(movie != null){
                                 mMovie.setFavorite(false);
                                 final Movie theMovie = movie;
